@@ -87,8 +87,8 @@ cd <nome-da-pasta-do-projeto>
 ### 2. Crie um Ambiente Virtual (Recomendado)
 
 ```bash
-python -m venv venv
-source venv/bin/activate  # No Windows: venv\Scripts\activate
+python -m venv .venv
+source .venv/bin/activate  # No Windows: venv\Scripts\activate
 ```
 
 ### 3. Instale as Dependências
