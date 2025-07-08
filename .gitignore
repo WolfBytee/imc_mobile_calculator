@@ -1,0 +1,31 @@
+# Bytecode Python
+__pycache__/
+*.pyc
+*.pyo
+
+# Arquivo de dados do usuário (registros de IMC)
+dados_imc.json
+
+# Gráfico gerado dinamicamente
+grafico_imc.png
+
+# APKs gerados (builds Android)
+bin/
+*.apk
+
+# Pastas temporárias do Buildozer
+.buildozer/
+.build/
+
+# Virtual environments (caso exista)
+.venv/
+venv/
+ENV/
+
+# Arquivos de backup/editor
+*~
+*.swp
+.DS_Store
+
+# Logs (caso existam futuramente)
+*.log

@@ -1,0 +1,242 @@
+#:import get_color_from_hex kivy.utils.get_color_from_hex
+
+<IMCRecordRow>:
+    cols: 4
+    size_hint_y: None
+    height: dp(35)
+    on_release: app.mostrar_detalhes(self.record_data)
+    
+    canvas.before:
+        Color:
+            rgba: get_color_from_hex('#06061b')
+        Rectangle:
+            pos: self.pos
+            size: self.size
+        Color:
+            rgba: get_color_from_hex('#151570')
+        Line:
+            width: 1
+            rectangle: self.x, self.y, self.width, self.height
+
+    Label:
+        text: root.record_data.get('data', '')
+        font_size: '14sp'
+    Label:
+        text: str(root.record_data.get('altura', ''))
+        font_size: '14sp'
+    Label:
+        text: str(root.record_data.get('peso', ''))
+        font_size: '14sp'
+    Label:
+        text: root.record_data.get('classificacao', '')
+        font_size: '14sp'
+
+<MainLayout>:
+    orientation: 'vertical'
+    padding: dp(10)
+    spacing: dp(10)
+    canvas.before:
+        Color:
+            rgba: get_color_from_hex('#0b0b26')
+        Rectangle:
+            pos: self.pos
+            size: self.size
+
+    Label:
+        text: "IMC - WolfByte"
+        font_size: '26sp'
+        bold: True
+        color: get_color_from_hex('#00ffff')
+        size_hint_y: None
+        height: self.texture_size[1]
+
+    GridLayout:
+        cols: 2
+        rows: 3
+        size_hint_y: None
+        height: self.minimum_height
+        spacing: dp(20)
+
+        Label:
+            text: "Altura (m):"
+            size_hint_x: 0.6
+        TextInput:
+            id: entry_altura
+            multiline: False
+            input_filter: 'float'
+            hint_text: "ex: 1.75"
+            height: dp(35)
+            size_hint_y: None
+
+        Label:
+            text: "Peso (kg):"
+            size_hint_x: 0.6
+        TextInput:
+            id: entry_peso
+            multiline: False
+            input_filter: 'float'
+            hint_text: "ex: 70.5"
+            height: dp(35)
+            size_hint_y: None
+
+        Label:
+            text: "Comentário:"
+            size_hint_x: 0.6
+        TextInput:
+            id: entry_comentario
+            multiline: False
+            hint_text: "Opcional"
+            height: dp(35)
+            size_hint_y: None
+
+    Label:
+        text: "Como estou me sentindo:"
+        size_hint_y: None
+        height: self.texture_size[1]
+
+    BoxLayout:
+        id: emoji_box
+        size_hint_y: None
+        height: dp(40)
+        spacing: dp(10)
+        
+    BoxLayout:
+        size_hint_y: None
+        height: dp(40)
+        spacing: dp(10)
+        Button:
+            text: "Salvar"
+            background_color: get_color_from_hex('#00ffff')
+            color: (0,0,0,1)
+            on_release: app.adicionar_registro()
+        Button:
+            text: "Mostrar Gráfico"
+            background_color: get_color_from_hex('#025e73')
+            on_release: app.mostrar_grafico()
+
+    # History Header
+    GridLayout:
+        cols: 4
+        size_hint_y: None
+        height: dp(28)
+        canvas.before:
+            Color:
+                rgba: get_color_from_hex('#151570')
+            Rectangle:
+                pos: self.pos
+                size: self.size
+        Label:
+            text: "Data"
+            bold: True
+        Label:
+            text: "Altura"
+            bold: True
+        Label:
+            text: "Peso"
+            bold: True
+        Label:
+            text: "Classificação"
+            bold: True
+            
+    ScrollView:
+        size_hint_y: 1
+        GridLayout:
+            id: history_list
+            cols: 1
+            size_hint_y: None
+            height: self.minimum_height
+
+<DetailsPopup>:
+    title: "Detalhes do Registro"
+    size_hint: (0.9, 0.7)
+    auto_dismiss: False
+    separator_color: get_color_from_hex('#00ffff')
+    title_color: get_color_from_hex('#00ffff')
+    title_align: 'center'
+    background_color: get_color_from_hex('#0b0b26')
+    background: 'atlas://data/images/defaulttheme/button_pressed'
+
+    BoxLayout:
+        orientation: 'vertical'
+        
+        GridLayout:
+            cols: 2
+            padding: dp(15)
+            spacing: dp(10)
+            
+            # Data
+            Label:
+                text: '[b]Data:[/b]'
+                markup: True
+                halign: 'left'
+                text_size: self.width, None
+            Label:
+                text: root.record.get('data', 'N/A')
+                halign: 'left'
+                text_size: self.width, None
+
+            # Altura
+            Label:
+                text: '[b]Altura:[/b]'
+                markup: True
+                halign: 'left'
+                text_size: self.width, None
+            Label:
+                text: f"{root.record.get('altura', 'N/A')} m"
+                halign: 'left'
+                text_size: self.width, None
+            
+            # Peso
+            Label:
+                text: '[b]Peso:[/b]'
+                markup: True
+                halign: 'left'
+                text_size: self.width, None
+            Label:
+                text: f"{root.record.get('peso', 'N/A')} kg"
+                halign: 'left'
+                text_size: self.width, None
+
+            # IMC
+            Label:
+                text: '[b]IMC:[/b]'
+                markup: True
+                halign: 'left'
+                text_size: self.width, None
+            Label:
+                text: f"{root.record.get('imc', 'N/A')} ({root.record.get('classificacao', 'N/A')})"
+                halign: 'left'
+                text_size: self.width, None
+
+            # Emoji
+            Label:
+                text: '[b]Emoji:[/b]'
+                markup: True
+                halign: 'left'
+                text_size: self.width, None
+            Label:
+                # This label ONLY displays the emoji, using the special font
+                text: root.record.get('nota', 'N/A')
+                font_name: 'EmojiFont'
+                font_size: '16sp'
+                halign: 'left'
+                text_size: self.width, None
+
+            # Comentário
+            Label:
+                text: '[b]Comentário:[/b]'
+                markup: True
+                halign: 'left'
+                text_size: self.width, None
+            Label:
+                text: root.record.get('comentario') or 'Nenhum'
+                halign: 'left'
+                text_size: self.width, None
+
+        Button:
+            text: "Fechar"
+            size_hint_y: None
+            height: dp(40)
+            background_color: get_color_from_hex('#025e73')
+            color: (1,1,1,1)
+            on_release: root.dismiss()
